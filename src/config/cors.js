@@ -3,7 +3,6 @@ import cors from "cors";
 const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = [
-      process.env.API_GATEWAY_URL,
       "http://localhost:3000"
     ];
 
