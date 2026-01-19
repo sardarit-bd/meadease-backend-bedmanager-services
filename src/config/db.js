@@ -1,20 +1,13 @@
 import mongoose from "mongoose";
 
-
-/*********** Database connection Here **********/
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.BEDMANAGER_DB, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    await mongoose.connect(process.env.BEDMANAGER_DB);
     console.log("✅ MongoDB connected");
   } catch (error) {
-    console.error("MongoDB connection failed", error);
+    console.error("❌ MongoDB connection failed:", error.message);
     process.exit(1);
   }
 };
 
-
-/********** Modules export from here *********/
 export default connectDB;

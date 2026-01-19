@@ -1,57 +1,37 @@
-/****** core modules import here *******/
-import cors from "cors";
 import express from "express";
+import helmet from "helmet";
 
+import corsMiddleware from "./config/cors.js";
+import routes from "./routes/index.js";
+import notFound from "./common/middlewares/notFound.js";
+import {errorHandler} from "./common/middlewares/errorMiddleware.js";
 
-/*******internal files import here *******/
-import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
-
-
-/****** express app initilazation here *******/
 const app = express();
 
+// security
+app.use(helmet());
 
-
-/********* Body Data Parse **********/
+// parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// cors
+app.use(corsMiddleware);
 
-
-/*********** Middleware Here ***********/
-/*********** CORS  Middleware Here ***********/
-const allowedOrigins = [
-    process.env.API_GETWAY_URL,
-    "http://localhost:3000",
-];
-app.use(
-    cors({
-        origin: function (origin, callback) {
-            if (!origin) return callback(null, true); // allow non-browser requests
-            if (allowedOrigins.includes(origin)) {
-                callback(null, true);
-            } else {
-                callback(new Error("Not allowed by CORS"));
-            }
-        },
-        credentials: true,
-    })
-);
-
-
-// health check
+// ROOT HEALTH CHECK
 app.get("/", (req, res) => {
-    res.status(200).json({
-        status: "OK",
-        service: "bed manager services",
-        uptime: process.uptime(),
-    });
+  res.status(200).json({
+    service: "Bed Manager",
+    status: "Running"
+  });
 });
 
+// routes
+app.use("/api/v1", routes);
 
-app.use(errorHandler);
+// error handlers (always last)
 app.use(notFound);
+app.use(errorHandler);
 
 
-/******* Export the module ******/
 export default app;
