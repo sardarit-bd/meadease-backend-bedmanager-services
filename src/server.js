@@ -1,23 +1,17 @@
+import "./config/env.js";
+
 import app from "./app.js";
-import connectDB from './config/db.js';
-import environment from "./config/env.js";
+import connectDB from "./config/db.js";
 
+const PORT = process.env.PORT || 5000;
 
-/******** PORT Define *******/
-const PORT = process.env.AUTH_SERVICE_PORT || 5000;
+const startServer = async () => {
 
+  connectDB();
 
-/********** Connect to Database Here **********/
-connectDB();
-
-
-/*********** Start The Server ***********/
-if (environment === "development") {
   app.listen(PORT, () => {
-    console.log(`🚀 Server running on port: ${PORT} in ${environment} mode`);
+    console.log(`🚀 Bed Manager running on port ${PORT}`);
   });
+};
 
-}
-
-
-export default app;
+startServer();
